@@ -84,7 +84,7 @@ __IAD structure__
     </tr>
 </table>
 
-___Presentation of IAD in PDD___
+___Presentation of IAD in BDD___
 ```php
 use data\Descriptor;
 

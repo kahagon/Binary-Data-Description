@@ -1,7 +1,7 @@
 data\Descriptor
 ================
-PHP-Data-Description(PDD) is a framework for abstraction of data structure.  
-The aim of PDD is to parse concrete data with pre-defined data structure.
+Binary-Data-Description(BDD) is a framework for abstraction of data structure.  
+The aim of BDD is to parse concrete data with pre-defined data structure.
 
 
 Requirements

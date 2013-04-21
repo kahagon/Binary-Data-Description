@@ -86,7 +86,7 @@ class Descriptor implements \IteratorAggregate {
             }
         }
         
-        $this->setData($data, $offset);
+        if ($data) $this->setData($data, $offset);
     }
     
     /**
@@ -157,6 +157,14 @@ class Descriptor implements \IteratorAggregate {
             }
         }
         return $field;
+    }
+    
+    public function __set($name, $data) {
+        $field = $this->getFieldByName($name);
+        if (!$field) {
+            throw new \Exception('specified field(' . $name . ') does not exist.' . PHP_EOL);
+        }
+        $field->setData($data);
     }
     
     public function __get($name) {

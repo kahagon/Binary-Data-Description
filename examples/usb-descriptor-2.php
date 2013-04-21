@@ -72,7 +72,7 @@ class USBIADDescriptor extends Descriptor {
     }
 }
 
-$usbIADDescriptor = new USBIADDescriptor(base64_decode('CAsAAg4DAAQ='));
+$usbIADDescriptor = new USBIADDescriptor("\x08\x0b\x00\x02\x0e\x03\x00\x04");
 
 
 print 'bLength          : ' . $usbIADDescriptor->bLength . PHP_EOL;

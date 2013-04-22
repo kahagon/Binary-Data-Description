@@ -98,7 +98,7 @@ class Descriptor implements \IteratorAggregate {
      * @param int $offset the offset to apply data
      * @throws \Exception throws Exception if size of data is shorter than field total length
      */
-    public final function __construct($data = null, $offset = 0) {
+    public function __construct($data = null, $offset = 0) {
         $reflection = new \ReflectionClass($this);
         $properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE);
         foreach ($properties as $property) {
@@ -124,7 +124,7 @@ class Descriptor implements \IteratorAggregate {
      * @return \data\Descriptor
      * @throws \Exception throws Exception if given field name already exists
      */
-    public final function addField(DescriptorField $field) {
+    public function addField(DescriptorField $field) {
         foreach ($this->fields as $_field) {
             if ($_field->getName() == $field->getName()) {
                 throw new \Exception('specified field name(' . $_field->getName() . ') is already exist');
@@ -140,7 +140,7 @@ class Descriptor implements \IteratorAggregate {
      * @param int $offset
      * @throws \Exception throws Exception if size of data is shorter than field total length
      */
-    public final function setData($data, $offset = 0) {
+    public function setData($data, $offset = 0) {
         $length = $this->getLength();
         if (strlen($data) < $length) {
             throw new \Exception('data length must be longer than sum of fileds length(' . $length . ')' . PHP_EOL);
@@ -155,7 +155,7 @@ class Descriptor implements \IteratorAggregate {
      * @param int|string $index
      * @return \data\DescriptorField
      */
-    public final function getField($index) {
+    public function getField($index) {
         if (is_int($index)) {
             return $this->getFieldByIndex($index);
         } else {
@@ -168,7 +168,7 @@ class Descriptor implements \IteratorAggregate {
      * @param int $index
      * @return \data\DescriptorField
      */
-    public final function getFieldByIndex($index) {
+    public function getFieldByIndex($index) {
         return $this->fields[$index];
     }
     
@@ -177,7 +177,7 @@ class Descriptor implements \IteratorAggregate {
      * @param string $name
      * @return \data\DescriptorField
      */
-    public final function getFieldByName($name) {
+    public function getFieldByName($name) {
         $field = null;
         foreach ($this->fields as $_field) {
             if ($_field->getName() == $name) {
@@ -208,7 +208,7 @@ class Descriptor implements \IteratorAggregate {
      * 
      * @return int
      */
-    public final function getLength() {
+    public function getLength() {
         $length = 0;
         foreach ($this->fields as $field) {
             $length += $field->getLength();

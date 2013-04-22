@@ -11,7 +11,6 @@ Requires PHP-5.4 or higher.
 
 Example
 ================
-Write class that inherits Descriptor class to present pre-defined data structure.  
 Here is an example.  
 USB IAD(Interface Association Descriptor) is a kind of USB Descriptor.  
 IAD is used to describe that two or more interfaces are associated to the same function.
@@ -86,80 +85,26 @@ __IAD structure__
 
 ___Presentation of IAD in BDD___
 ```php
+<?php
+require_once 'data/Descriptor.php';
 use data\Descriptor;
 
+/**
+ * @property int $bLength           \data\DescriptorField 1
+ * @property int $bDescriptorType   \data\DescriptorField 1
+ * @property int $bFirstInterface   \data\DescriptorField 1
+ * @property int $bInterfaceCount   \data\DescriptorField 1
+ * @property int $bFunctionClass    \data\DescriptorField 1
+ * @property int $bFunctionSubClass \data\DescriptorField 1
+ * @property int $bFunctionProtocol \data\DescriptorField 1
+ * @property int $iFunction         \data\DescriptorField 1
+ */
 class USBIADDescriptor extends Descriptor {
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bLength;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bDescriptorType;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFirstInterface;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bInterfaceCount;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFunctionClass;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFunctionSubClass;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFunctionProtocol;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $iFunction;
-    
-    protected function formatChar($data) {
-        return unpack('C', $data)[1];
-    }
+
 }
 
-$usbIADDescriptor = new USBIADDescriptor("\x08\x0b\x00\x02\x0e\x03\x00\x04");
 
+$usbIADDescriptor = new USBIADDescriptor("\x08\x0b\x00\x02\x0e\x03\x00\x04");
 
 print 'bLength          : ' . $usbIADDescriptor->bLength . PHP_EOL;
 print 'bDescriptorType  : ' . $usbIADDescriptor->bDescriptorType . PHP_EOL;
@@ -171,4 +116,10 @@ print 'bFunctionProtocol: ' . $usbIADDescriptor->bFunctionProtocol . PHP_EOL;
 print 'iFunction        : ' . $usbIADDescriptor->iFunction . PHP_EOL;
 ```
 
-There are some rule.
+Write class that inherits \data\Descriptor.  
+Field definition is presented by doc-comment as magic-property.  
+Write @property annotation for each fields.  
+The first argument of @property annotation, is type of the field.  
+The second is the name of the field.  
+The third is required to specify that magic-property is a DescriptorField.  
+The last is length of the field.

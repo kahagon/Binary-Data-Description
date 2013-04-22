@@ -2,74 +2,18 @@
 require_once realpath(dirname(__FILE__) . '/../src/data/Descriptor.php');
 use data\Descriptor;
 
+/**
+ * @property int $bLength           \data\DescriptorField 1
+ * @property int $bDescriptorType   \data\DescriptorField 1
+ * @property int $bFirstInterface   \data\DescriptorField 1
+ * @property int $bInterfaceCount   \data\DescriptorField 1
+ * @property int $bFunctionClass    \data\DescriptorField 1
+ * @property int $bFunctionSubClass \data\DescriptorField 1
+ * @property int $bFunctionProtocol \data\DescriptorField 1
+ * @property int $iFunction         \data\DescriptorField 1
+ */
 class USBIADDescriptor extends Descriptor {
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bLength;
     
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bDescriptorType;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFirstInterface;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bInterfaceCount;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFunctionClass;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFunctionSubClass;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $bFunctionProtocol;
-    
-    /**
-     * @descriptorField
-     * @descriptorLength 1
-     * @descriptorFormatter formatChar
-     * @var int
-     */
-    private $iFunction;
-    
-    protected function formatChar($data) {
-        return unpack('C', $data)[1];
-    }
 }
 
 $usbIADDescriptor = new USBIADDescriptor("\x08\x0b\x00\x02\x0e\x03\x00\x04");

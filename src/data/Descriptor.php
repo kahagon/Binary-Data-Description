@@ -100,22 +100,70 @@ class Descriptor implements \IteratorAggregate {
      */
     public function __construct($data = null, $offset = 0) {
         $reflection = new \ReflectionClass($this);
-        $properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE);
-        foreach ($properties as $property) {
-            $docComment = $property->getDocComment();
-            if (!$docComment) continue;
-            if (!preg_match('/@descriptorField/', $docComment)) continue;
-            
-            $matches = [];
-            if (preg_match('/@descriptorLength\s+(\d+)/', $docComment, $matches)) {
-                $length = (int)$matches[1];
-                $name = $property->getName();
-                $formatter = preg_match('/@descriptorFormatter\s+([_\w][_\w\d]+)/', $docComment, $matches) ? $matches[1] : null;
-                $this->addField(new DescriptorField($name, $length, $formatter ? $reflection->getMethod($formatter)->getClosure($this) : null));
+        $matches = [];
+        $classDocComment = $reflection->getDocComment();
+        $pattern = '/@property\s+(string|int|integer|float|double)\s+\$([_\w][_\w\d]*)\s+\\\data\\\DescriptorField\s+(\d+)/';
+        $numMatches = preg_match_all($pattern, $classDocComment, $matches);
+        if ($numMatches) {
+            $fieldTypeList = $matches[1];
+            $fieldNameList = $matches[2];
+            $fieldLengthList = $matches[3];
+            for ($i = 0; $i < $numMatches; $i++) {
+                $name = $fieldNameList[$i];
+                $length = $fieldLengthList[$i];
+                $type = $fieldTypeList[$i];
+                $formatter = null;
+                switch ($type) {
+                    case 'int':
+                    case 'integer':
+                        $formatter = $reflection->getMethod('formatInt')->getClosure();
+                        break;
+                    case 'float':
+                        $formatter = $reflection->getMethod('formatFloat')->getClosure();
+                        break;
+                    case 'double':
+                        $formatter = $reflection->getMethod('formatDouble')->getClosure();
+                        break;
+                    case 'long':
+                        $formatter = $reflection->getMethod('formatLong')->getClosure();
+                        break;
+                    default:
+                    case 'string':
+                        break;
+                }
+                $this->addField(new DescriptorField($name, $length, $formatter));
             }
         }
         
         if ($data) $this->setData($data, $offset);
+    }
+    
+    public static function formatFloat($data) {
+        return self::format("f", $data);
+    }
+    
+    public static function formatDouble($data) {
+        return self::format("d", $data);
+    }
+    
+    public static function formatLong($data) {
+        return self::format("l", $data);
+    }
+    
+    public static function formatInt($data) {
+        return self::format("i", $data);
+    }
+    
+    public static function format($format, $data) {
+        $dataLength = strlen($data);
+        if ($dataLength < 4) {
+            $lack = 4 - $dataLength;
+            for ($i = 0; $i < $lack; $i++) {
+                $data = $data . "\x00";
+            }
+        }
+        
+        return unpack($format, $data)[1];
     }
     
     /**
@@ -218,5 +266,9 @@ class Descriptor implements \IteratorAggregate {
 
     public function getIterator() {
         return new \ArrayIterator($this->fields);
+    }
+    
+    public function unpack($format, $data) {
+        return unpack($format, $data);
     }
 }

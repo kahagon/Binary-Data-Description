@@ -21,8 +21,18 @@ class DescriptorField {
      */
     private $data;
     
+    /**
+     *
+     * @var callable
+     */
     private $dataFormatter;
     
+    /**
+     * 
+     * @param int $name this field name
+     * @param int $length this field length
+     * @param callable $dataFormatter function for formatting raw data
+     */
     public function __construct($name, $length, callable $dataFormatter = null) {
         $this->name = $name;
         $this->length = $length;
@@ -34,6 +44,7 @@ class DescriptorField {
      * @param string $data
      * @param int $offset
      * @return int
+     * @throws \Exception throws Exception if size of data is shorter than field length
      */
     public function setData($data, $offset = 0) {
         if (strlen($data) < $this->length) {
@@ -43,14 +54,26 @@ class DescriptorField {
         return $this->length;
     }
     
+    /**
+     * return this field length
+     * @return int
+     */
     public function getLength() {
         return $this->length;
     }
     
+    /**
+     * return this field name
+     * @return string
+     */
     public function getName() {
         return $this->name;
     }
     
+    /**
+     * return actual data of this field
+     * @return mixed
+     */
     public function getData() {
         $dataFormatter = $this->dataFormatter;
         return $dataFormatter ? $dataFormatter($this->data) : $this->data;
@@ -69,6 +92,12 @@ class Descriptor implements \IteratorAggregate {
      */
     private $fields = [];
     
+    /**
+     * 
+     * @param string $data data to parse
+     * @param int $offset the offset to apply data
+     * @throws \Exception throws Exception if size of data is shorter than field total length
+     */
     public final function __construct($data = null, $offset = 0) {
         $reflection = new \ReflectionClass($this);
         $properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE);
@@ -93,7 +122,7 @@ class Descriptor implements \IteratorAggregate {
      * 
      * @param \data\DescriptorField $field
      * @return \data\Descriptor
-     * @throws \Exception
+     * @throws \Exception throws Exception if given field name already exists
      */
     public final function addField(DescriptorField $field) {
         foreach ($this->fields as $_field) {
@@ -109,12 +138,12 @@ class Descriptor implements \IteratorAggregate {
      * 
      * @param string $data
      * @param int $offset
-     * @throws \Exception
+     * @throws \Exception throws Exception if size of data is shorter than field total length
      */
     public final function setData($data, $offset = 0) {
-        $lenght = $this->getLength();
-        if (strlen($data) > $lenght) {
-            throw new \Exception('data length must be longer than sum of fileds length(' . $lenght . ')' . PHP_EOL);
+        $length = $this->getLength();
+        if (strlen($data) < $length) {
+            throw new \Exception('data length must be longer than sum of fileds length(' . $length . ')' . PHP_EOL);
         }
         foreach ($this->fields as $field) {
             $offset += $field->setData($data, $offset);

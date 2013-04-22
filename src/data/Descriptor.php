@@ -267,8 +267,4 @@ class Descriptor implements \IteratorAggregate {
     public function getIterator() {
         return new \ArrayIterator($this->fields);
     }
-    
-    public function unpack($format, $data) {
-        return unpack($format, $data);
-    }
 }

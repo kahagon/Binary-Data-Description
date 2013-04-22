@@ -102,7 +102,7 @@ class Descriptor implements \IteratorAggregate {
         $reflection = new \ReflectionClass($this);
         $matches = [];
         $classDocComment = $reflection->getDocComment();
-        $pattern = '/@property\s+(string|int|integer|float|double)\s+\$([_\w][_\w\d]*)\s+\\\data\\\DescriptorField\s+(\d+)/';
+        $pattern = '/@property\s+(string|int|integer|float|double|long)\s+\$([_\w][_\w\d]*)\s+\\\data\\\DescriptorField\s+(\d+)/';
         $numMatches = preg_match_all($pattern, $classDocComment, $matches);
         if ($numMatches) {
             $fieldTypeList = $matches[1];

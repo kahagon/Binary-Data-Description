@@ -251,6 +251,14 @@ class Descriptor implements \IteratorAggregate {
         }
         return $field ? $field->getData() : null;
     }
+    
+    public function __toString() {
+        $str = '';
+        foreach ($this->fields as $field) {
+            $str .= $field->getName() . ': ' . $field->getData() . PHP_EOL;
+        }
+        return $str;
+    }
 
     /**
      * 

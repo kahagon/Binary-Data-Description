@@ -255,6 +255,14 @@ class Descriptor implements \IteratorAggregate {
     public function __toString() {
         $str = '';
         foreach ($this->fields as $field) {
+            $str .= $field->getData();
+        }
+        return $str;
+    }
+    
+    public function dump() {
+        $str = '';
+        foreach ($this->fields as $field) {
             $str .= $field->getName() . ': ' . $field->getData() . PHP_EOL;
         }
         return $str;
